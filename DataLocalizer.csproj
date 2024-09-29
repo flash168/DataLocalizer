@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <TargetFramework>net8.0</TargetFramework>
+	  <PublishAot>true</PublishAot>
+    <Nullable>enable</Nullable>
+
+	  <!-- 单文件发布
+	  <PublishSingleFile>true</PublishSingleFile> -->
+
+	  <!-- 启用修剪来减少不必要的程序集 -->
+	  <PublishTrimmed>true</PublishTrimmed>
+	  <TrimMode>full</TrimMode>
+	  <!-- 删除符号调试文件 -->
+	  <DebugType>none</DebugType>
+
+	  <!-- 不包含 PDB 文件（如果不需要调试信息） -->
+	  <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+
+	  <!-- 关闭压缩，提高启动性能 -->
+	  <EnableCompressionInSingleFile>false</EnableCompressionInSingleFile>
+
+	  <!-- 确保 AOT 兼容 -->
+	  <InvariantGlobalization>true</InvariantGlobalization>
+
+	  <!-- 优化生成最小化的发布文件 -->
+	  <StripSymbols>true</StripSymbols>
+
+	  <!-- 设置发布模式为 Release -->
+	  <Configuration>Release</Configuration>
+	  <TrimmerDefaultAction>link</TrimmerDefaultAction>
+	  <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.10" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.10" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
+    <PackageReference Include="RestSharp" Version="112.0.0" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="450"
+        x:Class="DataLocalizer.MainWindow"
+        Title="DataLocalizer">
+	<Grid RowDefinitions="35,*,6,35" ColumnDefinitions="100,*,70" Margin="5">
+
+		<TextBlock Text="本地化源地址：" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+		<TextBox Grid.Column="1" Height="25" VerticalAlignment="Center" Name="txt_url" Watermark="输入完整的订阅地址" Text=""/>
+		<Button Grid.Column="2" Content="  去  " VerticalAlignment="Center" HorizontalAlignment="Center" Click="Button_Go"/>
+
+		<TextBox Grid.Row="1" Grid.ColumnSpan="3" Margin="10" Name="txt_Source" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap"/>
+
+		<ProgressBar Grid.Row="2" Grid.ColumnSpan="3" Margin="3,0" Height="2" Name="progress"/>
+		<Button Grid.Row="3" Grid.Column="1" Content=" 下载到本地 " VerticalAlignment="Center" HorizontalAlignment="Center" Click="Button_Down"/>
+
+		<Grid Grid.ColumnSpan="3" Grid.RowSpan="5" Name="mang" IsVisible="False">
+			<Border Background="Black" Opacity=".2"/>
+			<TextBlock Text="  忙····· " VerticalAlignment="Center" HorizontalAlignment="Center"/>
+		</Grid>
+
+	</Grid>
+</Window>
