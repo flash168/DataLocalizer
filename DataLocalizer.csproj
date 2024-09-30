@@ -12,8 +12,8 @@
 	  <!-- 启用修剪来减少不必要的程序集 -->
 	  <PublishTrimmed>true</PublishTrimmed>
 	  <TrimMode>full</TrimMode>
-	  <!-- 删除符号调试文件 -->
-	  <DebugType>none</DebugType>
+	  <!-- 删除符号调试文件
+	  <DebugType>none</DebugType> -->
 
 	  <!-- 不包含 PDB 文件（如果不需要调试信息） -->
 	  <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>

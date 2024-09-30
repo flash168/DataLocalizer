@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 using RestSharp;
 using System.IO;
 using System.Collections.Generic;
-using Microsoft.VisualBasic;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Text.Json.Serialization.Metadata;
 
 namespace DataLocalizer
 {
@@ -90,35 +87,48 @@ namespace DataLocalizer
         public async Task<int> SaveLocal(string path)
         {
             strings.Clear();
-            await File.WriteAllTextAsync(Path.Combine(path, "index.json"), Data);
-            var urls = AssembleUrl(path, DataJson.Spider);
-            downloadManager.AddTask(urls.Item1, urls.Item2);
+
+            DataJson.homeLogo = DownLoad(DataJson.homeLogo, path, "./");
+            DataJson.Spider = DownLoad(DataJson.Spider, path, "./jar/");
 
             foreach (var item in DataJson.Sites)
             {
-                var ts = AssembleUrl(path, item.api);
-                if (!strings.Contains(ts.Item2))
-                {
-                    strings.Add(ts.Item2);
-                    downloadManager.AddTask(ts.Item1, ts.Item2);
-                }
-                var ts2 = AssembleUrl(path, item.ext);
-                if (!strings.Contains(ts2.Item2))
-                {
-                    strings.Add(ts2.Item2);
-                    downloadManager.AddTask(ts2.Item1, ts2.Item2);
-                }
+                item.api = DownLoad(item.api, path, "./libs/");
+                item.ext = DownLoad(item.ext, path, "./js/");
             }
+            var json = JsonSerializer.Serialize(DataJson, options);
+
+            json = Uri.UnescapeDataString(json);
+            json = Regex.Unescape(json);
+            if (File.Exists(Path.Combine(path, "index.json")))
+                File.Delete(Path.Combine(path, "index.json"));
+            await File.WriteAllTextAsync(Path.Combine(path, "index.json"), json);
             return strings.Count + 1;
         }
 
-
-        private (string, string) AssembleUrl(string path, string _url)
+        private string DownLoad(string? url, string path, string path1)
         {
-            if (!path.EndsWith('\\'))
-                path += "\\";
-            var pt = new Uri(path);
-            string fullUri = new Uri(pt, _url).LocalPath;
+            if (string.IsNullOrEmpty(url) || url.Contains("csp") || (!url.StartsWith("http") && !url.StartsWith(".")))
+                return url;
+            var sp = AssembleUrl(url);
+            if (!strings.Contains(sp.Item2))
+            {
+                strings.Add(sp.Item2);
+                downloadManager.AddTask(sp.Item1, $"{path}{path1.TrimStart('.')}{sp.Item2}");
+            }
+            return $"{path1}{sp.Item2}";
+        }
+
+        private (string, string) AssembleUrl(string _url)
+        {
+            Uri uri;
+            // 使用 baseUri 拼接相对路径
+            if (_url?.StartsWith("./") == true)
+                uri = new Uri(baseUri, _url);
+            else
+                uri = new Uri(_url);
+
+            string fullUri = uri.Segments[uri.Segments.Length - 1];
             int questionMarkIndex = fullUri.IndexOf('?');
 
             // 如果找到问号，截取问号之前的部分
@@ -126,8 +136,10 @@ namespace DataLocalizer
             {
                 fullUri = fullUri.Substring(0, questionMarkIndex);
             }
-            // 使用 baseUri 拼接相对路径
-            Uri uri = new Uri(baseUri, _url);
+
+            fullUri = Uri.UnescapeDataString(fullUri);
+            fullUri = Regex.Unescape(fullUri);
+
             return (uri.AbsoluteUri, fullUri);
         }
 

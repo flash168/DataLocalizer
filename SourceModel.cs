@@ -9,11 +9,19 @@ namespace DataLocalizer
     }
     public class SourceModel
     {
+        public string? Wallpaper { get; set; }
         public string? HomeTip { get; set; }
         public string? homeLogo { get; set; }
 
         public string? Spider { get; set; }
         public List<SiteModel> Sites { get; set; }
+
+        [JsonConverter(typeof(JsonToStringConverter))]
+        public string flags { get; set; }
+        [JsonConverter(typeof(JsonToStringConverter))]
+        public string parses { get; set; }
+        [JsonConverter(typeof(JsonToStringConverter))]
+        public string lives { get; set; }
 
     }
 
@@ -27,7 +35,12 @@ namespace DataLocalizer
         public int searchable { get; set; }
         public int quickSearch { get; set; }
         public int filterable { get; set; }
+        [JsonConverter(typeof(JsonToStringConverter))]
         public string? ext { get; set; }
 
     }
+
+ 
+
+
 }
